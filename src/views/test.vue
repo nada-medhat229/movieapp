@@ -1,20 +1,13 @@
 <template>
   <div class="home">
     <Header />
-    <!-- <form action="" class="d-flex justify-content-between" @submit.prevent="resultmovie"> -->
-      <input
-        type="text"
-        class="form-control w-75 m-auto my-3"
-        placeholder="What are you Looking For?"
-        v-model="search"
-      />
-      <!-- <input type="submit" value="search">
-    </form> -->
     <div class="container">
-      <div class="row gap-3">
+      <div class="row mt-4">
+        <div class="d-flex justify-content-between flex-wrap">
           <div
-            class="col-md-3 card-movie"
-            v-for="(movie, i) in searchmovie"
+            class="card m-1"
+            style="width: 18rem"
+            v-for="(movie, i) in movies"
             :key="i"
           >
             <img
@@ -29,6 +22,7 @@
                 >Detail</router-link
               >
             </div>
+          </div>
         </div>
       </div>
     </div>
@@ -38,7 +32,7 @@
 <script>
 import Header from "@/components/Header.vue";
 import env from "../env";
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import axios from "axios";
 export default {
   components: {
@@ -46,34 +40,19 @@ export default {
   },
 
   setup() {
-    let search = ref("");
-    let movies = ref([]);
-    onMounted(async  () => {
+    const movies = ref([]);
+    onMounted(async () => {
       const results = await axios.get(
         `https://api.themoviedb.org/3/movie/popular?api_key=${env.apikey}`
       );
-      movies.value = results.data.results;
 
       if (results.status == 200) {
         movies.value = results.data.results;
       }
     });
 
-    const searchmovie = computed(() => {
-      return movies.value.filter((movie) => {
-        return (
-          movie.title
-            .toLowerCase()
-            .indexOf(search.value.toLowerCase()) != -1
-        );
-      });
-});
-   
     return {
-      search,
       movies,
-      searchmovie,
-      
     };
   },
 };
@@ -99,9 +78,8 @@ export default {
     }
   }
 
-  .card-movie {
-    // background: #fff;
-    color: #fff;
+  .card {
+    color: #000;
     .card-img-top {
       height: 350px;
     }
