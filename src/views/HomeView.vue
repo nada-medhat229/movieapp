@@ -1,34 +1,29 @@
 <template>
   <div class="home">
     <Header />
-    <!-- <form action="" class="d-flex justify-content-between" @submit.prevent="resultmovie"> -->
-      <input
-        type="text"
-        class="form-control w-75 m-auto my-3"
-        placeholder="What are you Looking For?"
-        v-model="search"
-      />
-      <!-- <input type="submit" value="search">
-    </form> -->
+    <input
+      type="text"
+      class="form-control w-75 m-auto my-3"
+      placeholder="What are you Looking For?"
+      v-model="search"
+    />
     <div class="container">
-      <div class="row gap-3">
-          <div
-            class="col-md-3 card-movie"
-            v-for="(movie, i) in searchmovie"
-            :key="i"
-          >
+      <div class="row">
+        <div class="col-md-3" v-for="(movie, i) in searchmovie" :key="i">
+          <div class="card-movie">
             <img
               :src="`https://image.tmdb.org/t/p/original/${movie.poster_path}`"
               class="card-img-top"
               :alt="movie.original_title"
             />
             <div class="card-body d-flex justify-content-between flex-column">
-              <h5 class="card-title">{{ movie.original_title }}</h5>
+              <h6 class="card-title">{{ movie.original_title }}</h6>
               <p class="card-text">{{ movie.overview }}</p>
-              <router-link to="/movie/tt0409591" class="btn btn-detail w-100"
+              <router-link :to="'/movie/'+movie.id" class="btn btn-detail w-100"
                 >Detail</router-link
               >
             </div>
+          </div>
         </div>
       </div>
     </div>
@@ -48,10 +43,11 @@ export default {
   setup() {
     let search = ref("");
     let movies = ref([]);
-    onMounted(async  () => {
+    onMounted(async () => {
       const results = await axios.get(
         `https://api.themoviedb.org/3/movie/popular?api_key=${env.apikey}`
       );
+      console.log(results);
       movies.value = results.data.results;
 
       if (results.status == 200) {
@@ -62,18 +58,15 @@ export default {
     const searchmovie = computed(() => {
       return movies.value.filter((movie) => {
         return (
-          movie.title
-            .toLowerCase()
-            .indexOf(search.value.toLowerCase()) != -1
+          movie.title.toLowerCase().indexOf(search.value.toLowerCase()) != -1
         );
       });
-});
-   
+    });
+
     return {
       search,
       movies,
       searchmovie,
-      
     };
   },
 };
@@ -102,8 +95,17 @@ export default {
   .card-movie {
     // background: #fff;
     color: #fff;
+    margin: 10px 0;
+    h6{
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 1;
+    }
     .card-img-top {
       height: 350px;
+      border-radius: 10px 10px 0 0;
+    margin-bottom: 10px;
     }
     .card-text {
       display: -webkit-box;
