@@ -1,9 +1,9 @@
 <template lang="">
   <div class="container">
-    <div class="card border-0">
+    <div class="card border-0 ">
     <img
       :src="`https://image.tmdb.org/t/p/original/${movie.poster_path}`"
-      class="card-img-top"
+      class="card-img-top poster"
       :alt="movie.original_title"
     />
     <div class="card-body">
@@ -73,6 +73,9 @@ export default {
 <style lang="scss" scoped>
 .card{
   background: transparent;
+  .poster{
+    height: 95vh;
+  }
   .card-title{
     color: #ea813b;
   }
